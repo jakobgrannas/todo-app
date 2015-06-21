@@ -1,0 +1,15 @@
+.todo__footer {
+	@extend %clearfix;
+	border-top: 1px dashed rgba(0,0,0,0.2);
+	margin-top: 4rem;
+	padding: 0.9rem 1.2rem;
+	font-size: 0.8em;
+}
+
+.items-left {
+	color: rgba(0,0,0,0.5);
+}
+
+.mark-all {
+	float: right;
+}

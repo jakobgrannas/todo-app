@@ -1,0 +1,15 @@
+.add-todo {
+	padding: 1.2rem;
+	display: flex;
+
+	.textfield {
+		flex: 1;
+		display: inline-block;
+		margin-right: 0.6em;
+	}
+
+	.button--submit {
+		width: 150px;
+		display: inline-block;
+	}
+}

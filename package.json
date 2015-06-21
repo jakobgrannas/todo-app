@@ -1,0 +1,33 @@
+{
+  "name": "TodoApp",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server"
+  },
+  "keywords": [],
+  "author": "Jakob Grannas",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.12.4",
+    "del": "^1.2.0",
+    "express": "^4.12.4",
+    "flux": "^2.0.3",
+    "gulp": "^3.9.0",
+    "gulp-imagemin": "^2.3.0",
+    "gulp-minify-css": "^1.1.6",
+    "gulp-nodemon": "^2.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.0.1",
+    "gulp-util": "^3.0.5",
+    "gulp-webserver": "^0.9.1",
+    "jsx-loader": "^0.13.2",
+    "method-override": "^2.3.3",
+    "node-bourbon": "^4.2.3",
+    "node-libs-browser": "^0.5.2",
+    "react": "^0.13.3",
+    "underscore": "^1.8.3",
+    "webpack": "^1.9.11"
+  }
+}

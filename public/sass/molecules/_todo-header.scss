@@ -1,0 +1,13 @@
+.todo__header {
+	position: relative;
+	padding: 1em 0;
+	min-height: 120px;
+	border-bottom: 1px dashed rgba(0,0,0,0.2);
+}
+
+.todo__title {
+	@include alignCenter();
+	font-size: 1.9em;
+	text-align: center;
+	margin: 0 auto;
+}

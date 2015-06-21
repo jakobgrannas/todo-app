@@ -1,0 +1,7 @@
+.modal {
+	background-color: $color--white;
+	border: 1px solid $color--light-shadow;
+	border-radius: 5px;
+	@include alignCenter();
+	width: 600px;
+}

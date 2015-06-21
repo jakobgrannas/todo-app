@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Todo App</title>
+	<link rel="stylesheet" type="text/css" href="dist/css/styles.css"/>
+</head>
+<body>
+
+<div id="todo-app">
+	<div class="modal">
+		<header class="todo__header">
+			<h1 class="todo__title">Todos</h1>
+		</header>
+		<main class="todo__content">
+			<section class="add-todo">
+				<input type="text" class="textfield" placeholder="What needs to be done?" name="add-todo-label" id="add-todo-label">
+				<label for="add-todo-label" class="hidden">What needs to be done?</label>
+				<button type="submit" class="button--submit">Add Todo</button>
+			</section>
+			<ol class="todo__list">
+				<li class="todo__item draggable">
+					<input type="checkbox" class="checkbox" name="todo" id="itemName">
+                    <label for="itemName" class="checkbox-label">Something</label>
+				</li>
+                <li class="todo__item draggable">
+                    <input type="checkbox" class="checkbox" name="todo" id="itemName2">
+                    <label for="itemName2" class="checkbox-label">Something</label>
+                </li>
+			</ol>
+		</main>
+		<footer class="todo__footer">
+			<span class="items-left">2 items left</span>
+			<a href="#" class="link mark-all">Mark all as complete</a>
+		</footer>
+	</div>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="dist/js/vendor.js"></script>
+<script type="text/javascript" src="dist/js/bundle.js"></script>
+</body>
+</html>

@@ -31,7 +31,7 @@ gulp.task('scripts', function(callback) {
     webpack({
         entry: {
 			app: paths.scripts.src + "/app.js",
-			vendors: ['react', 'flux']
+			vendors: ['react', 'flux', 'react-dnd']
 		},
         output: {
             path: __dirname,
@@ -48,11 +48,11 @@ gulp.task('scripts', function(callback) {
         },
 		plugins: [
 			new webpack.optimize.CommonsChunkPlugin('vendors', paths.scripts.dest + '/vendor.js'),
-			new webpack.optimize.UglifyJsPlugin({
+			/*new webpack.optimize.UglifyJsPlugin({
 				mangle: {
 					except: ['$super', '$', 'exports', 'require']
 				}
-			})
+			})*/
 		],
         resolve: {
 			/*alias: {
@@ -103,7 +103,7 @@ var changeEvent = function(evt, src) {
 };
 
 gulp.task('watch', function() {
-    gulp.watch(paths.scripts.src + '**/*.js', ['scripts']);
+    gulp.watch(paths.scripts.src + '/**/*.js', ['scripts']);
     gulp.watch(paths.images.src, ['images']);
     gulp.watch(paths.sass.src, ['sass']).on('change', function(evt) {
         changeEvent(evt, 'sass/');

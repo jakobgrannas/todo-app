@@ -42,7 +42,8 @@ function makeDigestFun(key, params) { // TODO: Refactor this
 			data: {
 				id: 'todo3',
 				text: "I'm new here",
-				order: 3
+				order: 3,
+				isChecked: false
 			}
 		}
 	}
@@ -53,12 +54,14 @@ function makeDigestFun(key, params) { // TODO: Refactor this
 				{
 					id: 'todo1',
 					text: 'Something to do',
-					order: 1
+					order: 1,
+					isChecked: true
 				},
 				{
 					id: 'todo2',
 					text: 'Something else to do',
-					order: 2
+					order: 2,
+					isChecked: false
 				}
 			]
 		};

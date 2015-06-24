@@ -7,5 +7,7 @@ module.exports = keyMirror({
 
 	REQUEST_PENDING: null,
 	REQUEST_ERROR: null,
-	REQUEST_TIMEOUT: null
+	REQUEST_TIMEOUT: null,
+
+	DRAG_TYPE_TODO: null
 });

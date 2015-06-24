@@ -47,7 +47,7 @@ gulp.task('scripts', function(callback) {
             ]
         },
 		plugins: [
-			new webpack.optimize.CommonsChunkPlugin('vendors', paths.scripts.dest + '/vendor.js'),
+			new webpack.optimize.CommonsChunkPlugin('vendors', paths.scripts.dest + '/vendor.js')
 			/*new webpack.optimize.UglifyJsPlugin({
 				mangle: {
 					except: ['$super', '$', 'exports', 'require']

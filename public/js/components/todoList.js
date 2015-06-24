@@ -1,6 +1,11 @@
 var React = require('react'),
 	TodoActions = require('../actions/TodoActions'),
-	TodoStore = require('../stores/TodoStore');
+	TodoStore = require('../stores/TodoStore'),
+	update = require('react/lib/update'),
+	//TodoConstants = require('../constants/TodoConstants'),
+	SortableListItem = require('./SortableListItem'),
+	HTML5Backend = require('react-dnd/modules/backends/HTML5'),
+	DragDropContext = require('react-dnd').DragDropContext;
 
 var TodoList = React.createClass({
 	getInitialState: function () {
@@ -8,7 +13,7 @@ var TodoList = React.createClass({
 	},
 	componentDidMount: function() {
 		TodoStore.addChangeListener(this._onChange);
-		TodoActions.getTodoList(); // TODO: Is this where I should put this?
+		TodoActions.getTodoList(); // TODO: Is this really a good place to put this?
 	},
 	componentWillUnmount: function () {
 		TodoStore.removeChangeListener(this._onChange);
@@ -19,15 +24,33 @@ var TodoList = React.createClass({
 	_onChange: function () {
 		this.setState(TodoStore.getState());
 	},
+	moveItem: function (item, afterItem) {
+		var listItems = this.state.data,
+			itemId = item.id,
+			afterId = afterItem.id,
+			item = listItems.filter(i => i.id === itemId)[0],
+			afterItem = listItems.filter(i => i.id === afterId)[0],
+			itemIndex = listItems.indexOf(item),
+			afterIndex = listItems.indexOf(afterItem);
+
+		this.setState(update(this.state, {
+			data: {
+				$splice: [
+					[itemIndex, 1],
+					[afterIndex, 0, item]
+				]
+			}
+		}));
+	},
 	render: function () {
-		var todoItems = this.state.data.map(function (todoItem) {
+		var todoItems = this.state.data.map(function (todoItem, i) {
 			return (
-				<li className="todo__item" key={todoItem.id}>
-					<input type="checkbox" className="checkbox" name="todo" id={todoItem.id} />
-					<label htmlFor={todoItem.id} className="checkbox-label">{todoItem.text}</label>
-				</li>
+				<SortableListItem
+					key={i}
+					moveItem={this.moveItem}
+					item={todoItem} />
 			);
-		});
+		}, this);
 
 		return (
 			<ol className="todo__list">
@@ -37,4 +60,4 @@ var TodoList = React.createClass({
 	}
 });
 
-module.exports = TodoList;
+module.exports = DragDropContext(HTML5Backend)(TodoList);

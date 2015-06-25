@@ -38,7 +38,6 @@ gulp.task('scripts', function(callback) {
             filename: paths.scripts.dest + "/bundle.js"
         },
         module: {
-			//noParse: ['./node_modules/react/dist/react.min.js'],
             loaders: [
                 {
                     test: /\.js$/,
@@ -47,6 +46,7 @@ gulp.task('scripts', function(callback) {
             ]
         },
 		plugins: [
+			new webpack.optimize.DedupePlugin(),
 			new webpack.optimize.CommonsChunkPlugin('vendors', paths.scripts.dest + '/vendor.js')
 			/*new webpack.optimize.UglifyJsPlugin({
 				mangle: {
@@ -55,9 +55,6 @@ gulp.task('scripts', function(callback) {
 			})*/
 		],
         resolve: {
-			/*alias: {
-				'react': './node_modules/react/dist/react.min.js'
-			},*/
             extensions: ['', '.js', '.jsx']
         }
     }, function(err, stats) {

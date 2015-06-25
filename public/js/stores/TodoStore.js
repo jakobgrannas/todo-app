@@ -1,7 +1,7 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	EventEmitter = require('events').EventEmitter,
 	TodoConstants = require('../constants/TodoConstants'),
-	_ = require('lodash');
+	update = require('react/lib/update');
 
 // Define initial data points
 var _todos = {
@@ -16,7 +16,7 @@ function setState(state) {
 	_todos = state;
 }
 
-var TodoStore = _.assign({}, EventEmitter.prototype, {
+var TodoStore = update(EventEmitter.prototype, {$merge: {
 	getState: function () {
 		return _todos;
 	},
@@ -29,7 +29,7 @@ var TodoStore = _.assign({}, EventEmitter.prototype, {
 	removeChangeListener: function (callback) {
 		this.removeListener('change', callback);
 	}
-});
+}});
 
 AppDispatcher.register(function (payload) {
 	var action = payload.action;

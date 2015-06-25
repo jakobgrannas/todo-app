@@ -23,7 +23,7 @@
     "gulp-sass": "^2.0.1",
     "gulp-util": "^3.0.5",
     "jsx-loader": "^0.13.2",
-    "lodash": "^3.9.3",
+    "lodash.flow": "^3.2.1",
     "method-override": "^2.3.3",
     "node-bourbon": "^4.2.3",
     "node-libs-browser": "^0.5.2",

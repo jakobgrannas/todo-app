@@ -4,7 +4,7 @@ var React = require('react'),
 	DragSource = require('react-dnd').DragSource,
 	DropTarget = require('react-dnd').DropTarget,
 	PropTypes = React.PropTypes,
-	flow = require('lodash/function/flow');
+	flow = require('lodash.flow');
 
 var dragSource = {
 	beginDrag: function (props) {

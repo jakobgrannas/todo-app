@@ -2,17 +2,3 @@
 	margin: 0;
 	padding: 0;
 }
-
-.todo__item {
-	background-color: $color--baby-blue;
-	padding: 0.9em 1.2rem;
-	list-style: none;
-
-	&:nth-of-type(even) {
-		background-color: transparent;
-	}
-
-	&:hover {
-		cursor: move;
-	}
-}

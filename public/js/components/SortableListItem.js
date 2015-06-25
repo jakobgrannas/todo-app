@@ -1,7 +1,5 @@
 var React = require('react'),
 	classNames = require('classnames'),
-	TodoActions = require('../actions/TodoActions'),
-	TodoStore = require('../stores/TodoStore'),
 	TodoConstants = require('../constants/TodoConstants'),
 	DragSource = require('react-dnd').DragSource,
 	DropTarget = require('react-dnd').DropTarget,
@@ -10,16 +8,23 @@ var React = require('react'),
 
 var dragSource = {
 	beginDrag: function (props) {
+		// Make only this data available to the drop target(s)
 		return {
-			item: props.item
+			id: props.id
 		};
+	},
+	endDrag: function (props, monitor) {
+		// If the drop was actually handled by a target, not just dropped outside the list
+		if(monitor.didDrop()) {
+			props.updateList();
+		}
 	}
 };
 
 /**
  * Specifies the props to inject into your component.
  */
-function collect(connect, monitor) {
+function dragCollect(connect, monitor) {
 	return {
 		connectDragSource: connect.dragSource(),
 		isDragging: monitor.isDragging()
@@ -29,70 +34,57 @@ function collect(connect, monitor) {
 function dropCollect (connect, monitor) {
 	return {
 		connectDropTarget: connect.dropTarget(),
-		highlighted: monitor.canDrop(),
-		hovered: monitor.isOver()
+		isHovered: monitor.isOver()
 	}
 }
 
 var dropTarget = {
 	hover: function (props, monitor) {
-		var draggedId = monitor.getItem().item.id;
+		var draggedId = monitor.getItem().id;
 
-		if (draggedId !== props.item.id) {
-			props.moveItem(monitor.getItem().item, props.item);
+		if (draggedId !== props.id) {
+			props.moveItem(monitor.getItem().id, props.id);
 		}
 	}
 };
 
 var SortableListItem = React.createClass({
-
 	propTypes: {
 		moveItem: PropTypes.func.isRequired,
+		updateList: PropTypes.func.isRequired,
+		id: PropTypes.string.isRequired,
+		text: PropTypes.string.isRequired,
+		isChecked: PropTypes.bool.isRequired,
 
 		// Injected by React DnD:
 		isDragging: PropTypes.bool.isRequired,
 		connectDragSource: PropTypes.func.isRequired,
 		connectDropTarget: PropTypes.func.isRequired
 	},
-
-	getInitialState: function () {
-		return {
-			isChecked: this.props.item.isChecked
-		};
-	},
-	componentDidMount: function() {
-		TodoStore.addChangeListener(this._onChange);
-	},
-	componentWillUnmount: function () {
-		TodoStore.removeChangeListener(this._onChange);
-	},
-	_onChange: function () {
-		this.setState(TodoStore.getState());
-	},
-	onCheckboxCheck: function () {
-		// TODO: Save state to BE
-		this.setState({isChecked: event.target.checked});
+	handleChange: function () {
+		var isChecked = event.target.checked;
+		this.props.updateList(this.props.id, isChecked);
 	},
 	render: function () {
 		var isDragging = this.props.isDragging,
+			isHovered = this.props.isHovered,
 			connectDropTarget = this.props.connectDropTarget,
 			connectDragSource = this.props.connectDragSource;
 
 		return connectDragSource(connectDropTarget(
 			<li className={classNames({
 				'todo__item': true,
-				'todo__item is-highlighted': this.props.highlighted,
-				'todo__item is-hovered': this.props.hovered
-			})}
-				style={{ opacity: isDragging ? 0.5 : 1 }}>
-				<input type="checkbox" className="checkbox" name="todo" id={this.props.item.id} checked={this.state.isChecked} onChange={this.onCheckboxCheck}/>
-				<label htmlFor={this.props.item.id} className="checkbox-label">{this.props.item.text}</label>
+				'is-hovered': isHovered,
+				'is-dragging': isDragging
+			})}>
+				<input type="checkbox" className="checkbox" name="todo" id={this.props.id} checked={this.props.isChecked} onChange={this.handleChange} />
+				<label htmlFor={this.props.id} className="checkbox-label">{this.props.text}</label>
 			</li>
 		));
 	}
 });
 
 module.exports = flow(
-	DragSource(TodoConstants.DRAG_TYPE_TODO, dragSource, collect),
+	DragSource(TodoConstants.DRAG_TYPE_TODO, dragSource, dragCollect),
 	DropTarget(TodoConstants.DRAG_TYPE_TODO, dropTarget, dropCollect)
 )(SortableListItem);

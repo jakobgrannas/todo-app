@@ -1,7 +1,7 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	EventEmitter = require('events').EventEmitter,
 	TodoConstants = require('../constants/TodoConstants'),
-	_ = require('underscore');
+	_ = require('lodash');
 
 // Define initial data points
 var _todos = {
@@ -16,7 +16,7 @@ function setState(state) {
 	_todos = state;
 }
 
-var TodoStore = _.extend({}, EventEmitter.prototype, {
+var TodoStore = _.assign({}, EventEmitter.prototype, {
 	getState: function () {
 		return _todos;
 	},

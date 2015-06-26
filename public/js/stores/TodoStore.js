@@ -12,8 +12,23 @@ function addTodo (todo) {
 	_todos.data.push(todo.data);
 }
 
-function setState(state) {
+function setState (state) {
 	_todos = state;
+}
+
+function handleTodoResponse (response) {
+	if (response === TodoConstants.REQUEST_PENDING) {
+		console.log('Pending!');
+	}
+	else if (response === TodoConstants.REQUEST_TIMEOUT) {
+		console.log('Timeout!');
+	}
+	else if (response === TodoConstants.REQUEST_ERROR) {
+		console.log('Error');
+	}
+	else {
+		setState(response.body);
+	}
 }
 
 var TodoStore = update(EventEmitter.prototype, {$merge: {
@@ -40,7 +55,7 @@ AppDispatcher.register(function (payload) {
 
 			break;
 		case TodoConstants.GET_TODO_LIST:
-			setState(action.response);
+			handleTodoResponse(action.response);
 
 			break;
 		default:

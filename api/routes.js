@@ -1,9 +1,10 @@
-var indexPage = require('./controllers/indexController');
+var indexController = require('./controllers/indexController'),
+	todoController = require('./controllers/todoController');
 
 module.exports = function (app) {
-    app.get('/', indexPage.render);
+    app.get('/', indexController.render);
 
-    /*app.post('/newDeploy', function (req, res) {
-        newDeployController.sendMessage.call(newDeployController.sendMessage, req, res, io);
-    });*/
+	app.route('/todos')
+		.get(todoController.list)
+		.post(todoController.create);
 };

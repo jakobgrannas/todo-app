@@ -25,8 +25,8 @@ var TodoApp = React.createClass({
 	},
 	moveItem: function (itemId, afterId) {
 		var listItems = this.state.data,
-			item = listItems.filter(i => i.id === itemId)[0],
-			afterItem = listItems.filter(i => i.id === afterId)[0],
+			item = listItems.filter(i => i['_id'] === itemId)[0],
+			afterItem = listItems.filter(i => i['_id'] === afterId)[0],
 			itemIndex = listItems.indexOf(item),
 			afterIndex = listItems.indexOf(afterItem),
 			sortedList = update(this.state.data, {
@@ -52,7 +52,7 @@ var TodoApp = React.createClass({
 	},
 	updateList: function (itemId, isChecked) {
 		var list = this.state.data,
-			item = list.filter(i => i.id === itemId)[0],
+			item = list.filter(i => i['_id'] === itemId)[0],
 		itemIndex = list.indexOf(item);
 
 		if(itemIndex >= 0) {// TODO: What about new items that don't exist in the array?
@@ -70,6 +70,10 @@ var TodoApp = React.createClass({
 		// Solve re-ordering problem:
 		// OPT #1: items.map(item.order: i)
 		// OPT #2: save entire list as is upon endDrag
+	},
+	addTodo: function () {
+		console.log('add todo!');
+		TodoActions.addTodo(this.state.todoText);
 	},
 	render: function () {
 		var itemsLeft = this.state.data.length - this.state.data.filter(i => i.isChecked).length;

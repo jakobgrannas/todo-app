@@ -109,16 +109,4 @@ gulp.task('watch', function() {
     });
 });
 
-gulp.task('start', function (callback) {
-    return nodemon({
-        script: 'server.js',
-        ext: 'html js',
-        env: { 'NODE_ENV': 'development' }
-    })
-        .on('restart', ['scripts'])
-    .on('start', function () {
-        callback();
-    });
-});
-
 gulp.task('default', ['clean', 'sass', 'images', 'scripts', 'watch']);

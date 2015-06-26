@@ -1,10 +1,19 @@
-### Team Awesome's TV site ###
-This repository is for a website that Team Awesome uses to display fun/useful stuff on their TV in the Stockholm office.
+# Todo App
+A basic todo app with React, Node, Express and MongoDB
 
-### How do I get set up? ###
+## Dependencies
+- node
+- mongodb
+- gulp
 
-* Clone the repo
-* `cd` into the directory where you cloned the repo
-* Install all node dependencies using `npm install`
-* Run the app from the command line using `npm start` or `node server`
-* The app should now be running on http://localhost:3333
+## How to run the app
+First make sure mongo is running
+`mongo`
+
+Then install all node modules
+`npm install`
+
+Then start the app
+`gulp`
+
+The app should now be running on `http://localhost:1337`

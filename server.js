@@ -1,12 +1,14 @@
-var express = require('./express.config'),
+var express = require('./config/express'),
     http = require('http'),
     port = 1337,
-    app = express(),
-    server = http.createServer(app);
+	mongoose = require('./config/mongoose'),
+    app;
 
+mongoose();
+app = express();
 
 // Start server
-server.listen(port, function () {
+http.createServer(app).listen(port, function () {
    console.log('Server started on http://localhost:' + port);
 });
 

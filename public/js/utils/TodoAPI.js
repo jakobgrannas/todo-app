@@ -1,7 +1,7 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	TodoConstants = require('../constants/TodoConstants'),
 	TodoActions = require('../actions/TodoActions'),
-	API_URL = '/api/v2',
+	request = require('superagent'),
 	_TIMEOUT = 10000,
 	_pendingRequests = {};
 
@@ -14,10 +14,6 @@ function abortPendingRequests(key) {
 	}
 }
 
-function makeUrl(part) {
-	return API_URL + part;
-}
-
 function dispatch(key, response, params) {
 	var payload = {actionType: key, response: response};
 	if (params) {
@@ -28,15 +24,16 @@ function dispatch(key, response, params) {
 
 // return successful response, else return request Constants
 function makeDigestFun(key, params) { // TODO: Refactor this
-	/*return function (err, response) {
+	return function (err, response) {
 		if (err && err.timeout === _TIMEOUT) {
 			dispatch(key, TodoConstants.REQUEST_TIMEOUT, params);
 		}
 		else if (!response.ok) {
 			dispatch(key, TodoConstants.REQUEST_ERROR, params);
 		}
-		else {*/
+		else {
 
+	/*
 	if(key === TodoConstants.ADD_TODO) {
 		var response = {
 			data: {
@@ -65,41 +62,48 @@ function makeDigestFun(key, params) { // TODO: Refactor this
 				}
 			]
 		};
-	}
+	}*/
 			dispatch(key, response, params);
-		/*}
-	};*/
+		}
+	};
 }
 
-// a get request with an authtoken param
 function get(url) {
 	return request
 		.get(url)
-		.timeout(TIMEOUT)
-		.query({authtoken: token()}); // TODO: Remove this
+		.timeout(_TIMEOUT);
+}
+
+function post(url, data) {
+	return request
+		.post(url)
+		.send(data)
+		.set('Accept', 'application/json');
 }
 
 module.exports = {
 
 	getTodoList: function () { // TODO: Refactor this
-		//var url = makeUrl("/entities/" + entityId);
-		var key = TodoConstants.GET_TODO_LIST;
-		var params = {};
+		var url = '/todos',
+			key = TodoConstants.GET_TODO_LIST;
+
 		abortPendingRequests(key);
-		//dispatch(key, TodoConstants.REQUEST_PENDING, params);
-		//_pendingRequests[key] = get(url).end(
-			makeDigestFun(key, params);
-		//);
+
+		dispatch(key, TodoConstants.REQUEST_PENDING);
+
+		_pendingRequests[key] = get(url).end(
+			makeDigestFun(key)
+		);
 	},
-	addTodo: function () {
-		//var url = makeUrl("/entities/" + entityId);
-		var key = TodoConstants.ADD_TODO;
-		var params = {};
+	addTodo: function (data) {
+		var url = '/todos',
+			key = TodoConstants.ADD_TODO;
+
 		abortPendingRequests(key);
-		//dispatch(key, TodoConstants.REQUEST_PENDING, params);
-		//_pendingRequests[key] = get(url).end(
-		makeDigestFun(key, params);
-		//);
+		dispatch(key, TodoConstants.REQUEST_PENDING, data);
+		_pendingRequests[key] = post(url, data).end(
+			makeDigestFun(key, data)
+		);
 	},
 	saveList: function () {
 		// Not yet implemented

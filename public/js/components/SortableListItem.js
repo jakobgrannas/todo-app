@@ -43,7 +43,7 @@ var dropTarget = {
 		var draggedId = monitor.getItem().id;
 
 		if (draggedId !== props.id) {
-			props.moveItem(monitor.getItem().id, props.id);
+			props.moveItem(draggedId, props.id);
 		}
 	}
 };

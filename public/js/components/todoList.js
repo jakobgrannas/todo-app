@@ -11,7 +11,7 @@ var TodoList = React.createClass({
 					key={i}
 					moveItem={this.props.moveItem}
 					updateList={this.props.updateList}
-					id={todoItem.id}
+					id={todoItem['_id']}
 					text={todoItem.text}
 					isChecked={todoItem.isChecked}
 				/>

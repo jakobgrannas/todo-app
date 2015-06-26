@@ -6,11 +6,15 @@ var Footer = React.createClass({
 		markAll: PropTypes.func.isRequired,
 		itemsLeft: PropTypes.number.isRequired
 	},
+	handleClick: function (e) {
+		e.preventDefault();
+		this.props.markAll();
+	},
 	render: function () {
 		return (
 			<footer className="todo__footer">
 				<span className="items-left">{this.props.itemsLeft} items left</span>
-				<a href="#" className="link mark-all" onClick={this.props.markAll}>Mark all as complete</a>
+				<a href="#" className="link mark-all" onClick={this.handleClick}>Mark all as complete</a>
 			</footer>
 		);
 	}

@@ -90,9 +90,11 @@ gulp.task('images', function() {
         .pipe(gulp.dest(paths.images.dest));
 });
 
-gulp.task('clean', function() {
-    return gulp.src([paths.sass.dest, paths.scripts.dest], {read: false})
-        .pipe(del());
+gulp.task('clean', function(callback) {
+    del([
+		paths.sass.dest + '/**/*.css',
+		paths.scripts.dest + '/**/*.js'
+	], callback);
 });
 
 var changeEvent = function(evt, src) {
@@ -119,4 +121,4 @@ gulp.task('start', function (callback) {
     });
 });
 
-gulp.task('default', ['sass', 'images', 'scripts', 'watch']);
+gulp.task('default', ['clean', 'sass', 'images', 'scripts', 'watch']);

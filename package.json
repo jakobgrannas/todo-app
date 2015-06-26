@@ -25,6 +25,7 @@
     "jsx-loader": "^0.13.2",
     "lodash.flow": "^3.2.1",
     "method-override": "^2.3.3",
+    "mongoose": "^4.0.6",
     "node-bourbon": "^4.2.3",
     "node-libs-browser": "^0.5.2",
     "react": "^0.13.3",

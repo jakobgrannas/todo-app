@@ -11,16 +11,16 @@ var TodoApp = React.createClass({
 		return TodoStore.getState();
 	},
 	componentDidMount: function() {
-		TodoStore.addChangeListener(this._onChange);
+		TodoStore.addChangeListener(this.onStoreChange);
 		TodoActions.getTodoList();
 	},
 	componentWillUnmount: function () {
-		TodoStore.removeChangeListener(this._onChange);
+		TodoStore.removeChangeListener(this.onStoreChange);
 	},
 	componentWillReceiveProps: function () {
 		TodoActions.getTodoList();
 	},
-	_onChange: function () {
+	onStoreChange: function () {
 		this.setState(TodoStore.getState());
 	},
 	moveItem: function (itemId, afterId) {
@@ -28,16 +28,19 @@ var TodoApp = React.createClass({
 			item = listItems.filter(i => i.id === itemId)[0],
 			afterItem = listItems.filter(i => i.id === afterId)[0],
 			itemIndex = listItems.indexOf(item),
-			afterIndex = listItems.indexOf(afterItem);
-
-		this.setState(update(this.state, {
-			data: {
+			afterIndex = listItems.indexOf(afterItem),
+			sortedList = update(this.state.data, {
 				$splice: [
 					[itemIndex, 1],
 					[afterIndex, 0, item]
 				]
-			}
-		}));
+			});
+
+		sortedList.map((item, i) => item.order = i);
+
+		this.setState({
+			data: sortedList
+		});
 	},
 	markAllTodos: function () {
 		var list = this.state.data;
@@ -54,6 +57,9 @@ var TodoApp = React.createClass({
 
 		if(itemIndex >= 0) {// TODO: What about new items that don't exist in the array?
 			list[itemIndex].isChecked = isChecked;
+		}
+		else {
+			// add item, or should it come directly from the BE?
 		}
 
 		this.setState({

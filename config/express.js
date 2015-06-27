@@ -18,15 +18,13 @@ module.exports = function() {
     // Set /public as the static content directory
     app.use(express.static(defaults.root + "/public"));
 
-	require('../api/routes')(app);
-
-	/*[
-		'model',
-		'recipeRoute'
-	].map(function(controllerName) {
-			var controller = require('../api/routes/' + controllerName);
-			controller(app);
-		});*/
+	[
+		'indexRouter',
+		'todosRouter'
+	].map(function(routerName) {
+		var router = require('../api/routes/' + routerName);
+		router(app);
+	});
 
     return app;
 };

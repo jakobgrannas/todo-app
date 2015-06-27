@@ -16,7 +16,7 @@ var dragSource = {
 	endDrag: function (props, monitor) {
 		// If the drop was actually handled by a target, not just dropped outside the list
 		if(monitor.didDrop()) {
-			props.updateList();
+			props.updateList(monitor.getItem().id);
 		}
 	}
 };
@@ -51,6 +51,7 @@ var dropTarget = {
 var SortableListItem = React.createClass({
 	propTypes: {
 		moveItem: PropTypes.func.isRequired,
+		updateItem: PropTypes.func.isRequired,
 		updateList: PropTypes.func.isRequired,
 		id: PropTypes.string.isRequired,
 		text: PropTypes.string.isRequired,
@@ -61,9 +62,9 @@ var SortableListItem = React.createClass({
 		connectDragSource: PropTypes.func.isRequired,
 		connectDropTarget: PropTypes.func.isRequired
 	},
-	handleChange: function () {
+	handleCheckboxChange: function () {
 		var isChecked = event.target.checked;
-		this.props.updateList(this.props.id, isChecked);
+		this.props.updateItem(this.props.id, isChecked);
 	},
 	render: function () {
 		var isDragging = this.props.isDragging,
@@ -77,7 +78,7 @@ var SortableListItem = React.createClass({
 				'is-hovered': isHovered,
 				'is-dragging': isDragging
 			})}>
-				<input type="checkbox" className="checkbox" name="todo" id={this.props.id} checked={this.props.isChecked} onChange={this.handleChange} />
+				<input type="checkbox" className="checkbox" name="todo" id={this.props.id} checked={this.props.isChecked} onChange={this.handleCheckboxChange} />
 				<label htmlFor={this.props.id} className="checkbox-label">{this.props.text}</label>
 			</li>
 		));

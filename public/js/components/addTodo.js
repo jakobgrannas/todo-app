@@ -6,12 +6,20 @@ var AddTodo = React.createClass({
 			todoText: null
 		}
 	},
+	handleInputChange: function (e) {
+		this.setState({
+			todoText: e.target.value
+		});
+	},
+	handleClick: function () {
+		this.props.clickHandler(this.state.todoText);
+	},
 	render: function () {
 		return (
 			<section className="add-todo">
-				<input type="text" className="textfield" placeholder="What needs to be done?" defaultValue={this.state.todoText} name="new-todo-text" id="new-todo-text" />
+				<input type="text" className="textfield" placeholder="What needs to be done?" onChange={this.handleInputChange} name="new-todo-text" id="new-todo-text" />
 				<label htmlFor="new-todo-text" className="hidden">What needs to be done</label>
-				<button type="submit" className="button--submit" onClick={this.props.addTodo}>Add Todo</button>
+				<button type="submit" className="button--submit" onClick={this.handleClick}>Add Todo</button>
 			</section>
 		);
 	}

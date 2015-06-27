@@ -10,6 +10,7 @@ var TodoList = React.createClass({
 				<SortableListItem
 					key={i}
 					moveItem={this.props.moveItem}
+					updateItem={this.props.updateItem}
 					updateList={this.props.updateList}
 					id={todoItem['_id']}
 					text={todoItem.text}

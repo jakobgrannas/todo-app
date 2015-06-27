@@ -6,6 +6,12 @@ var TodoActions = {
 	},
 	getTodoList: function () {
 		TodoAPI.getTodoList();
+	},
+	saveTodo: function (data) {
+		TodoAPI.saveTodo(data);
+	},
+	saveTodoList: function (list) {
+		TodoAPI.saveTodoList(list);
 	}
 };
 

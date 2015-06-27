@@ -1,12 +1,12 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	TodoConstants = require('../constants/TodoConstants'),
-	TodoActions = require('../actions/TodoActions'),
 	request = require('superagent'),
+	API_BASE_PATH = '/todos/',
 	_TIMEOUT = 10000,
 	_pendingRequests = {};
 
 
-function abortPendingRequests(key) {
+function abortPendingRequests (key) {
 	if (_pendingRequests[key]) {
 		_pendingRequests[key]._callback = function(){};
 		_pendingRequests[key].abort();
@@ -14,7 +14,7 @@ function abortPendingRequests(key) {
 	}
 }
 
-function dispatch(key, response, params) {
+function dispatch (key, response, params) {
 	var payload = {actionType: key, response: response};
 	if (params) {
 		payload.queryParams = params;
@@ -22,8 +22,13 @@ function dispatch(key, response, params) {
 	AppDispatcher.handleAction(payload)
 }
 
+function getUrl (params) {
+	var extraParams = params || '';
+	return API_BASE_PATH + extraParams;
+}
+
 // return successful response, else return request Constants
-function makeDigestFun(key, params) { // TODO: Refactor this
+function makeDigestFun (key, params) {
 	return function (err, response) {
 		if (err && err.timeout === _TIMEOUT) {
 			dispatch(key, TodoConstants.REQUEST_TIMEOUT, params);
@@ -32,59 +37,34 @@ function makeDigestFun(key, params) { // TODO: Refactor this
 			dispatch(key, TodoConstants.REQUEST_ERROR, params);
 		}
 		else {
-
-	/*
-	if(key === TodoConstants.ADD_TODO) {
-		var response = {
-			data: {
-				id: 'todo3',
-				text: "I'm new here",
-				order: 3,
-				isChecked: false
-			}
-		}
-	}
-	else {
-		var response = {
-			// TODO: Mock data goes here!
-			data: [
-				{
-					id: 'todo1',
-					text: 'Something to do',
-					order: 1,
-					isChecked: true
-				},
-				{
-					id: 'todo2',
-					text: 'Something else to do',
-					order: 2,
-					isChecked: false
-				}
-			]
-		};
-	}*/
 			dispatch(key, response, params);
 		}
 	};
 }
 
-function get(url) {
+function get (url) {
 	return request
 		.get(url)
 		.timeout(_TIMEOUT);
 }
 
-function post(url, data) {
+function post (url, data) {
 	return request
 		.post(url)
 		.send(data)
 		.set('Accept', 'application/json');
 }
 
-module.exports = {
+function put (url, data) {
+	return request
+		.put(url)
+		.send(data)
+		.set('Accept', 'application/json');
+}
 
-	getTodoList: function () { // TODO: Refactor this
-		var url = '/todos',
+module.exports = {
+	getTodoList: function () {
+		var url = getUrl(),
 			key = TodoConstants.GET_TODO_LIST;
 
 		abortPendingRequests(key);
@@ -95,18 +75,40 @@ module.exports = {
 			makeDigestFun(key)
 		);
 	},
+	saveTodoList: function (list) {
+		var url = getUrl(),
+			key = TodoConstants.SAVE_TODO_LIST;
+
+		abortPendingRequests(key);
+
+		dispatch(key, TodoConstants.REQUEST_PENDING, list);
+
+		_pendingRequests[key] = put(url, list).end(
+			makeDigestFun(key, list)
+		);
+	},
 	addTodo: function (data) {
-		var url = '/todos',
+		var url = getUrl(),
 			key = TodoConstants.ADD_TODO;
 
 		abortPendingRequests(key);
+
 		dispatch(key, TodoConstants.REQUEST_PENDING, data);
+
 		_pendingRequests[key] = post(url, data).end(
 			makeDigestFun(key, data)
 		);
 	},
-	saveList: function () {
-		// Not yet implemented
-	}
+	saveTodo: function (data) {
+		var url = getUrl(data._id),
+			key = TodoConstants.SAVE_TODO;
 
+		abortPendingRequests(key);
+
+		dispatch(key, TodoConstants.REQUEST_PENDING, data);
+
+		_pendingRequests[key] = put(url, data).end(
+			makeDigestFun(key, data)
+		);
+	}
 };

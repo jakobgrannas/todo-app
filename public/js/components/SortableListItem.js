@@ -62,8 +62,9 @@ var SortableListItem = React.createClass({
 		connectDragSource: PropTypes.func.isRequired,
 		connectDropTarget: PropTypes.func.isRequired
 	},
-	handleCheckboxChange: function () {
-		var isChecked = event.target.checked;
+	handleCheckboxChange: function (event) {
+		var target = event.target || event.srcElement,
+			isChecked = target.checked;
 		this.props.updateItem(this.props.id, isChecked);
 	},
 	render: function () {

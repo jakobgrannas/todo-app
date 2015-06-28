@@ -2,17 +2,16 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	EventEmitter = require('events').EventEmitter,
 	TodoConstants = require('../constants/TodoConstants'),
 	update = require('react/lib/update'),
-	_todos = { // This is where we store our internal state
-		data: [] // TODO: Refactor _todos to only array, not object with an array
-	};
+	_todos = [], // This is where we store our internal state
+	_status = TodoConstants.REQUEST_SUCCESS;
 
 function addTodo (todo) {
-	_todos.data.push(todo.data);
+	_todos.push(todo);
 }
 
 function saveTodo (todo) {
-	var todoIndex = _todos.data.indexOf(todo._id);
-	_todos.data[todoIndex] = todo;
+	var todoIndex = _todos.indexOf(todo._id);
+	_todos[todoIndex] = todo;
 }
 
 function setState (state) {
@@ -20,6 +19,8 @@ function setState (state) {
 }
 
 function handleTodoResponse (response, successCallback) {
+	_status = response;
+
 	if (response === TodoConstants.REQUEST_PENDING) {
 		console.log('Pending!');
 	}
@@ -30,13 +31,17 @@ function handleTodoResponse (response, successCallback) {
 		console.log('Error');
 	}
 	else {
-		successCallback(response.body);
+		_status = TodoConstants.REQUEST_SUCCESS;
+		successCallback(response.body.data);
 	}
 }
 
 var TodoStore = update(EventEmitter.prototype, {$merge: {
 	getState: function () {
 		return _todos;
+	},
+	getStatus: function () {
+		return _status;
 	},
 	emitChange: function () {
 		this.emit('change');
@@ -60,7 +65,6 @@ AppDispatcher.register(function (payload) {
 			handleTodoResponse(action.response, saveTodo);
 			break;
 		case TodoConstants.SAVE_TODO_LIST:
-			console.log('SAVE_TODO_LIST', action.response);
 			handleTodoResponse(action.response, setState);
 			break;
 		case TodoConstants.GET_TODO_LIST:

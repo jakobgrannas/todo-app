@@ -1,23 +1,25 @@
 .todo__item {
 	background-color: $color--baby-blue;
 	color: #444444;
+	font-size: 0.9em;
+	text-shadow: 1px 1px 0 0 $color--white;
 	padding: 0.9em 1.2rem;
 	list-style: none;
 	@include transition(background-color 400ms ease, color 400ms ease);
 
 	&:nth-of-type(even) {
+		text-shadow: none;
 		background-color: transparent;
 	}
 
 	&:hover,
 	&.is-dragging {
-		cursor: move;
+		cursor: url('../images/draghandle.png'), auto;
 	}
 
 	&.is-hovered {
 		background-color: transparent;
 		border: 2px dashed rgba(0,0,0,0.2);
-		//border-bottom: 2px solid $color--sapphire;
 		color: $color--light-shadow;
 	}
 }

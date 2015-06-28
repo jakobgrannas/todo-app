@@ -27,7 +27,6 @@ function getUrl (params) {
 	return API_BASE_PATH + extraParams;
 }
 
-// return successful response, else return request Constants
 function makeDigestFun (key, params) {
 	return function (err, response) {
 		if (err && err.timeout === _TIMEOUT) {

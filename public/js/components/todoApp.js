@@ -3,12 +3,15 @@ var React = require('react'),
 	TodoList = require('./TodoList'),
 	Footer = require('./Footer'),
 	TodoActions = require('../actions/TodoActions'),
+	TodoConstants = require('../constants/TodoConstants'),
 	TodoStore = require('../stores/TodoStore'),
 	update = require('react/lib/update');
 
 var TodoApp = React.createClass({
 	getInitialState: function () {
-		return TodoStore.getState();
+		return {
+			data: TodoStore.getState()
+		}
 	},
 	componentDidMount: function() {
 		TodoStore.addChangeListener(this.onStoreChange);
@@ -20,8 +23,13 @@ var TodoApp = React.createClass({
 	componentWillReceiveProps: function () {
 		TodoActions.getTodoList();
 	},
+	shouldComponentUpdate: function () {
+		return TodoStore.getStatus() === TodoConstants.REQUEST_SUCCESS;
+	},
 	onStoreChange: function () {
-		this.setState(TodoStore.getState());
+		this.setState({
+			data: TodoStore.getState()
+		});
 	},
 	moveItem: function (itemId, afterId) {
 		var listItems = this.state.data,
@@ -49,6 +57,8 @@ var TodoApp = React.createClass({
 		this.setState({
 			data: list
 		});
+
+		TodoActions.saveTodoList(list);
 	},
 	saveTodoList: function () {
 		TodoActions.saveTodoList(this.state.data);

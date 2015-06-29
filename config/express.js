@@ -4,29 +4,33 @@ var express = require('express'),
 	compress = require('compression'),
 	methodOverride = require('method-override'),
 	app = express(),
-	env = process.env.NODE_ENV,
 	defaults = {
 		root: path.join(__dirname, '..')
 	};
 
+// Error handler middleware
+function errorHandler (error, req, res, next) {
+	var data = {
+		message: error.message,
+		errors: error.errors
+	};
+
+	if (app.get('env') === 'development') {
+		console.log(data);
+	}
+
+	res.status(error.status || 500);
+	res.json(data);
+}
+
 module.exports = function() {
 
-	if(env === 'production') {
+	if(app.get('env') === 'production') {
 		app.use(compress());
 	}
 
 	app.use(bodyParser.json());
     app.use(methodOverride());
-
-	if (env === 'development') {
-		app.use(function(error, req, res, next) {
-			res.status(error.status || 500);
-			res.render('error', {
-				message: error.message,
-				error: error
-			});
-		});
-	}
 
     // Set /public as the static content directory
     app.use(express.static(defaults.root + "/public"));
@@ -38,6 +42,8 @@ module.exports = function() {
 		var router = require('../api/routes/' + routerName);
 		router(app);
 	});
+
+	app.use(errorHandler);
 
     return app;
 };

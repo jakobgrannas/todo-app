@@ -1,5 +1,5 @@
 # Todo App
-A basic todo app with React, Node, Express and MongoDB
+A basic todo app with React, Webpack, Node, Express, Mongoose and MongoDB
 
 ## Dependencies
 - node

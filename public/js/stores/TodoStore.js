@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	TodoConstants = require('../constants/TodoConstants'),
 	update = require('react/lib/update'),
 	_todos = [], // This is where we store our internal state
-	_status = TodoConstants.REQUEST_SUCCESS;
+	_latestRequestStatus = TodoConstants.REQUEST_SUCCESS;
 
 function addTodo (todo) {
 	_todos.push(todo);
@@ -19,19 +19,20 @@ function setState (state) {
 }
 
 function handleTodoResponse (response, successCallback) {
-	_status = response;
+	_latestRequestStatus = response;
 
 	if (response === TodoConstants.REQUEST_PENDING) {
-		console.log('Pending!');
+		console.log('Request Pending!');
 	}
 	else if (response === TodoConstants.REQUEST_TIMEOUT) {
-		console.log('Timeout!');
+		console.log('Request Timeout!');
 	}
 	else if (response === TodoConstants.REQUEST_ERROR) {
-		console.log('Error');
+		// TODO: Do something with error response here
+		console.log('Request Error!');
 	}
 	else {
-		_status = TodoConstants.REQUEST_SUCCESS;
+		_latestRequestStatus = TodoConstants.REQUEST_SUCCESS;
 		successCallback(response.body.data);
 	}
 }
@@ -41,7 +42,7 @@ var TodoStore = update(EventEmitter.prototype, {$merge: {
 		return _todos;
 	},
 	getStatus: function () {
-		return _status;
+		return _latestRequestStatus;
 	},
 	emitChange: function () {
 		this.emit('change');

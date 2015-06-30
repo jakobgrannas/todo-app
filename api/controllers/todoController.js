@@ -11,6 +11,7 @@ exports.create = function (req, res, next) {
 
 	todo.save(function (error) {
 		if(error) {
+			error.status = 400;
 			return next(error);
 		}
 		else {
@@ -22,6 +23,7 @@ exports.create = function (req, res, next) {
 exports.list = function (req, res, next) {
 	Todo.find({}, function (error, todoList) {
 		if(error) {
+			error.status = 400;
 			return next(error);
 		}
 		else {
@@ -41,6 +43,7 @@ exports.updateAll = function (req, res, next) {
 			todo,
 			function (error, todo) {
 				if(error) {
+					error.status = 400;
 					return next(error);
 				}
 			}
@@ -49,6 +52,7 @@ exports.updateAll = function (req, res, next) {
 
 	Todo.find({}, function (error, todoList) {
 		if(error) {
+			res.status(400);
 			return next(error);
 		}
 		else {
@@ -63,6 +67,7 @@ exports.todoById = function (req, res, next, id) {
 		_id: id
 	}, function (error, todo) {
 		if(error) {
+			error.status = 400;
 			return next(error);
 		}
 		else {
@@ -79,6 +84,7 @@ exports.update = function (req, res, next) {
 		{"new": true}, // Required for Mongoose/MongoDB to return the updated record
 		function (error, todo) {
 			if(error) {
+				error.status = 400;
 				return next(error);
 			}
 			else {

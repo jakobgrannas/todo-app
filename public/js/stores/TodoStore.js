@@ -18,25 +18,6 @@ function setState (state) {
 	_todos = state;
 }
 
-function handleTodoResponse (response, successCallback) {
-	_latestRequestStatus = response;
-
-	if (response === TodoConstants.REQUEST_PENDING) {
-		console.log('Request Pending!');
-	}
-	else if (response === TodoConstants.REQUEST_TIMEOUT) {
-		console.log('Request Timeout!');
-	}
-	else if (response === TodoConstants.REQUEST_ERROR) {
-		// TODO: Do something with error response here
-		console.log('Request Error!');
-	}
-	else {
-		_latestRequestStatus = TodoConstants.REQUEST_SUCCESS;
-		successCallback(response.body.data);
-	}
-}
-
 var TodoStore = update(EventEmitter.prototype, {$merge: {
 	getState: function () {
 		return _todos;
@@ -60,16 +41,16 @@ AppDispatcher.register(function (payload) {
 
 	switch (action.actionType) {
 		case TodoConstants.ADD_TODO:
-			handleTodoResponse(action.response, addTodo);
+			addTodo(action.response.body.data);
 			break;
 		case TodoConstants.SAVE_TODO:
-			handleTodoResponse(action.response, saveTodo);
+			saveTodo(action.response.body.data);
 			break;
 		case TodoConstants.SAVE_TODO_LIST:
-			handleTodoResponse(action.response, setState);
+			setState(action.response.body.data);
 			break;
 		case TodoConstants.GET_TODO_LIST:
-			handleTodoResponse(action.response, setState);
+			setState(action.response.body.data);
 			break;
 		default:
 			return true;

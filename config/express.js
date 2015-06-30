@@ -19,7 +19,7 @@ function errorHandler (error, req, res, next) {
 		console.log(data);
 	}
 
-	res.status(error.status || 500);
+	res.status(error.status ||  500);
 	res.json(data);
 }
 

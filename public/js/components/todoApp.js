@@ -3,7 +3,6 @@ var React = require('react'),
 	TodoList = require('./TodoList'),
 	Footer = require('./Footer'),
 	TodoActions = require('../actions/TodoActions'),
-	TodoConstants = require('../constants/TodoConstants'),
 	TodoStore = require('../stores/TodoStore'),
 	update = require('react/lib/update');
 
@@ -22,9 +21,6 @@ var TodoApp = React.createClass({
 	},
 	componentWillReceiveProps: function () {
 		TodoActions.getTodoList();
-	},
-	shouldComponentUpdate: function () {
-		return TodoStore.getStatus() === TodoConstants.REQUEST_SUCCESS;
 	},
 	onStoreChange: function () {
 		this.setState({

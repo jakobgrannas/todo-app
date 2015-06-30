@@ -1,5 +1,6 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	TodoConstants = require('../constants/TodoConstants'),
+	MessageConstants = require('../constants/MessageConstants'),
 	request = require('superagent'),
 	API_BASE_PATH = '/todos/',
 	_TIMEOUT = 10000,
@@ -14,12 +15,12 @@ function abortPendingRequests (key) {
 	}
 }
 
-function dispatch (key, response, params) {
+function dispatch (key, response, options) {
 	var payload = {actionType: key, response: response};
-	if (params) {
-		payload.queryParams = params;
+	if (options) {
+		payload.options = options;
 	}
-	AppDispatcher.handleAction(payload)
+	AppDispatcher.handleAction(payload);
 }
 
 function getUrl (params) {
@@ -27,16 +28,19 @@ function getUrl (params) {
 	return API_BASE_PATH + extraParams;
 }
 
-function makeDigestFun (key, params) {
+function makeDigestFun (key, options) {
 	return function (err, response) {
+		var options = options || {};
 		if (err && err.timeout === _TIMEOUT) {
-			dispatch(key, TodoConstants.REQUEST_TIMEOUT, params);
+			options.triggeredBy = key;
+			dispatch(MessageConstants.REQUEST_TIMEOUT, response , options);
 		}
 		else if (!response.ok) {
-			dispatch(key, TodoConstants.REQUEST_ERROR, params);
+			options.triggeredBy = key;
+			dispatch(MessageConstants.REQUEST_ERROR, response, options);
 		}
 		else {
-			dispatch(key, response, params);
+			dispatch(key, response, options);
 		}
 	};
 }
@@ -51,14 +55,16 @@ function post (url, data) {
 	return request
 		.post(url)
 		.send(data)
-		.set('Accept', 'application/json');
+		.set('Accept', 'application/json')
+		.timeout(_TIMEOUT);
 }
 
 function put (url, data) {
 	return request
 		.put(url)
 		.send(data)
-		.set('Accept', 'application/json');
+		.set('Accept', 'application/json')
+		.timeout(_TIMEOUT);
 }
 
 module.exports = {
@@ -68,7 +74,9 @@ module.exports = {
 
 		abortPendingRequests(key);
 
-		dispatch(key, TodoConstants.REQUEST_PENDING);
+		dispatch(MessageConstants.REQUEST_PENDING, null, {
+			triggeredBy: key
+		});
 
 		_pendingRequests[key] = get(url).end(
 			makeDigestFun(key)
@@ -80,7 +88,11 @@ module.exports = {
 
 		abortPendingRequests(key);
 
-		dispatch(key, TodoConstants.REQUEST_PENDING, list);
+		dispatch(MessageConstants.REQUEST_PENDING, null, {
+			triggeredBy: key,
+			data: list
+		});
+
 
 		_pendingRequests[key] = put(url, list).end(
 			makeDigestFun(key, list)
@@ -92,7 +104,10 @@ module.exports = {
 
 		abortPendingRequests(key);
 
-		dispatch(key, TodoConstants.REQUEST_PENDING, data);
+		dispatch(MessageConstants.REQUEST_PENDING, null, {
+			triggeredBy: key,
+			data: data
+		});
 
 		_pendingRequests[key] = post(url, data).end(
 			makeDigestFun(key, data)
@@ -104,7 +119,10 @@ module.exports = {
 
 		abortPendingRequests(key);
 
-		dispatch(key, TodoConstants.REQUEST_PENDING, data);
+		dispatch(MessageConstants.REQUEST_PENDING, null, {
+			triggeredBy: key,
+			data: data
+		});
 
 		_pendingRequests[key] = put(url, data).end(
 			makeDigestFun(key, data)

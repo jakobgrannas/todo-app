@@ -4,7 +4,6 @@ var gulp = require('gulp'),
 	path = require('path'),
     sass = require('gulp-sass'),
     webpack = require('webpack'),
-    server = require('./server.js'),
     nodemon = require('gulp-nodemon'),
     rename = require('gulp-rename'),
     imagemin = require('gulp-imagemin'),
@@ -101,6 +100,10 @@ var changeEvent = function(evt, src) {
     gutil.log('File', gutil.colors.cyan(evt.path.replace(new RegExp('/.*(?=/' + src + ')/'), '')), 'was', gutil.colors.magenta(evt.type));
 };
 
+gulp.task('serve', function () {
+	require('./server.js');
+});
+
 gulp.task('watch', function() {
     gulp.watch(paths.scripts.src + '/**/*.js', ['scripts']);
     gulp.watch(paths.images.src, ['images']);
@@ -109,4 +112,4 @@ gulp.task('watch', function() {
     });
 });
 
-gulp.task('default', ['clean', 'sass', 'images', 'scripts', 'watch']);
+gulp.task('default', ['clean', 'sass', 'images', 'scripts', 'serve', 'watch']);

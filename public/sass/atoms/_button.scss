@@ -1,6 +1,7 @@
 .button--submit {
-	@include linear-gradient(0deg, #D6D5D3 0%, #DFDEDD 51%, #EAE9E8 52%, #EBEAE9 100%);
-	padding: 0.4em;
+	@include background-image(linear-gradient(0deg, #D6D5D3 0%, #DFDEDD 51%, #EAE9E8 52%, #EBEAE9 100%));
+	padding: 0.4rem;
+	height: 2.7rem;
 	text-align: center;
 	font-size: 0.8em;
 	font-weight: bold;

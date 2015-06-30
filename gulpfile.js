@@ -9,6 +9,7 @@ var gulp = require('gulp'),
     imagemin = require('gulp-imagemin'),
     minifyCSS = require('gulp-minify-css'),
     bourbon = require('node-bourbon'),
+	env = process.env.NODE_ENV || 'development',
     basePath = './public',
     paths = {
 		scripts: {
@@ -30,7 +31,7 @@ gulp.task('scripts', function(callback) {
     webpack({
         entry: {
 			app: paths.scripts.src + "/app.js",
-			vendors: ['react', 'flux', 'react-dnd']
+			vendors: ['react', 'react/addons', 'flux', 'react-dnd']
 		},
         output: {
             path: __dirname,
@@ -44,15 +45,23 @@ gulp.task('scripts', function(callback) {
                 }
             ]
         },
-		plugins: [
-			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.CommonsChunkPlugin('vendors', paths.scripts.dest + '/vendor.js')
-			/*new webpack.optimize.UglifyJsPlugin({
-				mangle: {
-					except: ['$super', '$', 'exports', 'require']
-				}
-			})*/
-		],
+		plugins: function () {
+			var plugins = [
+				new webpack.optimize.CommonsChunkPlugin('vendors', paths.scripts.dest + '/vendor.js')
+			];
+
+			if(env === 'production') {
+				plugins.push(
+					new webpack.optimize.UglifyJsPlugin({
+						mangle: {
+							except: ['$super', '$', 'exports', 'require']
+						}
+					})
+				);
+			}
+
+			return plugins;
+		}(),
         resolve: {
             extensions: ['', '.js', '.jsx']
         }

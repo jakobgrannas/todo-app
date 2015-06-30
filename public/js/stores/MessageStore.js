@@ -4,10 +4,6 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
 	update = require('react/lib/update'),
 	_messages = [];
 
-function setState (state) {
-	_messages = state;
-}
-
 function addMessage (message) {
 	_messages.push(message);
 }
